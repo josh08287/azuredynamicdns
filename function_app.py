@@ -9,8 +9,8 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 subscription_id = os.getenv('SUBSCRIPTION_ID')
 resource_group = os.getenv('RESOURCE_GROUP_NAME')
 
-@app.route(route="http_trigger")
-def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
+@app.route(route="update")
+def update(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Received request for update.')
     hostname = req.params.get('hostname')
     
@@ -38,7 +38,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
 def update_hostname_to_new_ip(hostname,newip) -> bool:
     #first check if that host already exists in the zone:
-    if os.getenv('AZURE_EXTENSION_DIR') is None:
+    if os.getenv('AZURE_IS_LOCAL') == "True":
         cred = azure.identity.InteractiveBrowserCredential()
         #token = cred.get_token()
     else:
